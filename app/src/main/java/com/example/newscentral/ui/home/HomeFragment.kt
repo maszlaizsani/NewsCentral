@@ -21,8 +21,6 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -41,7 +39,6 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
 
-
         return root
     }
 
@@ -51,6 +48,7 @@ class HomeFragment : Fragment() {
         var articles: ArrayList<Article> = ArrayList()
         lifecycleScope.launch {
             articles = NewsApi.newsAPIService.getProperties().articles as ArrayList<Article>
+            articles[0].isHeader = true // article has no id so this is how I separated the header
             val rView = view.findViewById<RecyclerView>(R.id.articleRecyclerView)
             rView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             rView.adapter = ArticleAdapter(context, articles) }

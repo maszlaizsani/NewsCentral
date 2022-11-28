@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class Article {
-
+    private boolean isHeader = false;
     @SerializedName("source")
     @Expose
     private Source source;
@@ -94,5 +94,14 @@ public class Article {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public void setHeader(boolean header) {
+        isHeader = header;
+    }
+
+    public boolean isHeader() {
+        return isHeader;
+    }
+
 
 }
