@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.newscentral.ArticleAdapter
 import com.example.newscentral.R
 import com.example.newscentral.databinding.FragmentHomeBinding
@@ -23,6 +24,9 @@ class HomeFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    var articles: ArrayList<Article> = ArrayList()
+    var myAdapter = ArticleAdapter(articles)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,9 +38,18 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
+       /* val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+        }*/
+        val swipeRefreshLayout : SwipeRefreshLayout = binding.swipeRefresh
+
+        swipeRefreshLayout.setOnRefreshListener {
+            lifecycleScope.launch {
+                articles = NewsApi.newsAPIService.getProperties().articles as ArrayList<Article>
+                articles[0].isHeader = true // article has no id so this is how I separated the header
+                myAdapter.setData(articles, swipeRefreshLayout)
+            }
         }
 
         return root
@@ -45,14 +58,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var articles: ArrayList<Article> = ArrayList()
         lifecycleScope.launch {
             articles = NewsApi.newsAPIService.getProperties().articles as ArrayList<Article>
             articles[0].isHeader = true // article has no id so this is how I separated the header
             val rView = view.findViewById<RecyclerView>(R.id.articleRecyclerView)
             rView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            rView.adapter = ArticleAdapter(context, articles) }
-        println(articles.toString())
+            //myAdapter = ArticleAdapter(articles)
+            rView.adapter = ArticleAdapter(articles)
+        }
     }
 
     override fun onDestroyView() {

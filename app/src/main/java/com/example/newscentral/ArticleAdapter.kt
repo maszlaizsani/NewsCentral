@@ -1,45 +1,41 @@
 package com.example.newscentral
 
-import android.content.Context
-import android.icu.util.UniversalTimeScale.from
 import android.view.LayoutInflater
-import android.view.LayoutInflater.from
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.newscentral.model.Article
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-private val ITEM_VIEW_TYPE_HEADER = 0
-private val ITEM_VIEW_TYPE_ITEM = 1
 
-class ArticleAdapter(myCtx: Context?, val articles: ArrayList<Article>) :
+class ArticleAdapter(private var articles: ArrayList<Article>) :
     RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var itemTitle: TextView = itemView.findViewById(R.id.articleTitle)
         var itemText: TextView = itemView.findViewById(R.id.articleText)
         var itemImage: ImageView = itemView.findViewById(R.id.articleImage)
+        var itemSave: ImageView = itemView.findViewById(R.id.saveArticleIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context)
+        val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.article_list_element, parent, false)
-        return ViewHolder(v)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val article: Article = articles[position]
         holder.itemTitle.text = article.title
         holder.itemText.text = article.content
+        holder.itemSave.setOnClickListener { /* TODO saveArticle function in database*/ }
 
         val imgUrl = article.urlToImage
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
@@ -53,29 +49,15 @@ class ArticleAdapter(myCtx: Context?, val articles: ArrayList<Article>) :
             .into(holder.itemImage)
     }
 
-    class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        companion object {
-            fun from(parent: ViewGroup): TextViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.header, parent, false)
-                return TextViewHolder(view)
-            }
-        }
-    }
-
     override fun getItemCount(): Int {
         return articles.size
     }
 
-    sealed class DataItem {
-        abstract val isHeader: Boolean
-
-        data class ArticleItem(val article: Article) : DataItem() {
-            override val isHeader = article.isHeader
-        }
-
-        object Header : DataItem() {
-            override val isHeader = true
-        }
+    fun setData(newArticleList: ArrayList<Article>, swipeRefreshLayout: SwipeRefreshLayout, ) {
+        val diffUtil = diffUtil(articles, newArticleList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        articles = newArticleList
+        diffResults.dispatchUpdatesTo(this)
+        swipeRefreshLayout.isRefreshing = false
     }
 }
