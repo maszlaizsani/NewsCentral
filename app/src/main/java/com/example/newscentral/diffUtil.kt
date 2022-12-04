@@ -1,7 +1,7 @@
 package com.example.newscentral
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.newscentral.model.Article
+import com.example.newscentral.APImodel.Article
 
 class diffUtil(private val oldList: ArrayList<Article>, private val newList: List<Article>) :
     DiffUtil.Callback() {

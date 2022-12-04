@@ -4,35 +4,48 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.newscentral.database.SavedArticleDatabase
 import com.example.newscentral.databinding.FragmentSavedArticlesBinding
 
 class SavedArticlesFragment : Fragment() {
 
     private var _binding: FragmentSavedArticlesBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private val myAdapter: SavedArticlesAdapter = SavedArticlesAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
-            ViewModelProvider(this).get(SavedArticlesViewModel::class.java)
-
         _binding = FragmentSavedArticlesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val application = requireNotNull(this.activity).application
+        val dataSource = SavedArticleDatabase.getInstance(application).savedArticleDatabaseDao
 
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val viewModelFactory = SavedArticlesViewModelFactory(dataSource, application)
+        val savedArticlesViewModel =
+            ViewModelProvider(
+                this, viewModelFactory
+            ).get(SavedArticlesViewModel::class.java)
+
+        val recycler = binding.savedArticlesRecycler
+
+        recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        recycler.adapter = myAdapter
+
+        savedArticlesViewModel.getSavedArticles().observe(viewLifecycleOwner) {
+            it?.let {
+                myAdapter.setData(it)
+            }
         }
-        return root
+
+        return binding.root
     }
 
     override fun onDestroyView() {

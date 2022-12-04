@@ -9,12 +9,24 @@
         android:id="@+id/nav_home"
         android:name="com.example.newscentral.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_detailedFragment"
+            app:destination="@id/detailedFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_saved_articles"
         android:name="com.example.newscentral.ui.savedArticles.SavedArticlesFragment"
         android:label="@string/menu_saved_articles"
-        tools:layout="@layout/fragment_saved_articles" />
+        tools:layout="@layout/fragment_saved_articles" >
+        <action
+            android:id="@+id/action_nav_saved_articles_to_detailedFragment"
+            app:destination="@id/detailedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailedFragment"
+        android:name="com.example.newscentral.ui.detailedView.DetailedFragment"
+        android:label="DetailedFragment" />
 
 </navigation>

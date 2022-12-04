@@ -1,6 +1,6 @@
 package com.example.newscentral.service;
 
-import com.example.newscentral.model.News
+import com.example.newscentral.APImodel.News
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,7 +15,7 @@ var retrofit = Retrofit.Builder()
 
 interface NewsAPIService {
     @GET("v2/top-headlines?country=hu&apiKey=347e9a09ce334ba49b3bd458fa0393d6")
-    suspend fun getProperties(): News
+    suspend fun getHeadlinesInHungary(): News
 }
 
 object NewsApi {

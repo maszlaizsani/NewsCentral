@@ -1,13 +1,21 @@
 package com.example.newscentral.ui.savedArticles
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.example.newscentral.database.SavedArticleDatabase
+import com.example.newscentral.database.SavedArticleDatabaseDao
+import com.example.newscentral.database.SavedArticleEntity
 
-class SavedArticlesViewModel : ViewModel() {
+class SavedArticlesViewModel(val dataSource: SavedArticleDatabaseDao, application: Application) :
+    ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is Saved Articles Fragment"
+    fun getSavedArticles(): LiveData<List<SavedArticleEntity>> {
+        return Transformations.map(dataSource.getAll()){
+            return@map it
+        }
     }
-    val text: LiveData<String> = _text
+
 }

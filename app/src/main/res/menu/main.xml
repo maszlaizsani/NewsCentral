@@ -2,8 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_hungarian_top"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_set_to_hungarian_top"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_us_top"
+        android:orderInCategory="100"
+        android:title="@string/action_set_to_us_top"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_german_top"
+        android:orderInCategory="100"
+        android:title="@string/action_set_to_de_top"
         app:showAsAction="never" />
 </menu>
