@@ -10,5 +10,7 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_saved_articles">Saved articles</string>
+    <string name="menu_details">Details</string>
     <string name="header_text">Top Hungarian articles right now</string>
+    <string name="open_browser">Megnyitás böngészőben</string>
 </resources>

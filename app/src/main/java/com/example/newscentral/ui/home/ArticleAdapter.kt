@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,8 +24,7 @@ import com.example.newscentral.ui.detailedView.DetailedFragment
 import com.github.satoshun.coroutine.autodispose.view.autoDisposeScope
 import kotlinx.coroutines.launch
 
-
-class ArticleAdapter(private var articles: ArrayList<Article>) :
+class ArticleAdapter(private var articles: ArrayList<Article>, private val articleListener: ArticleListener) :
     RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -44,19 +44,20 @@ class ArticleAdapter(private var articles: ArrayList<Article>) :
         val article: Article = articles[position]
         holder.itemTitle.text = article.title
         holder.itemText.text = article.content
+        holder.itemView.setOnClickListener { articleListener.onClick(articles[position]) }
         holder.itemSave.setOnClickListener {
             holder.itemView.autoDisposeScope.launch {
                 val savedArticle = convertApiModelToEntity(articles[position])
-                val dataSource =
+                val dataBase =
                     SavedArticleDatabase.getInstance(holder.itemSave.context).savedArticleDatabaseDao
-                savedArticle.articleId = dataSource.getNextId()
-                dataSource.insert(savedArticle)
+                if (dataBase.getNextId() != null) savedArticle.articleId = dataBase.getNextId()
+                dataBase.insert(savedArticle)
             }
             Toast.makeText(holder.itemSave.context, "Article saved!", Toast.LENGTH_SHORT).show()
         }
 
         val imgUrl = article.urlToImage
-        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        val imgUri = imgUrl?.toUri()?.buildUpon()?.scheme("https")?.build()
         Glide.with(holder.itemImage.context)
             .load(imgUri)
             .apply(
@@ -67,9 +68,9 @@ class ArticleAdapter(private var articles: ArrayList<Article>) :
             .into(holder.itemImage)
 
         holder.itemImage.setOnClickListener {
-            val activity = holder.itemImage.context as AppCompatActivity
-            val myFragment: Fragment =  DetailedFragment(articles[position])
-            activity.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment_content_main, myFragment).addToBackStack(null).commit();}
+            val action = HomeFragmentDirections.openDetailFragment(articles[position])
+            it.findNavController().navigate(action)
+        }
     }
 
     override fun getItemCount(): Int {

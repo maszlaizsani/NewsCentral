@@ -15,7 +15,7 @@ interface SavedArticleDatabaseDao {
     @Query("select * from saved_articles where url=:articleUrl")
     fun getArticle(articleUrl: String): LiveData<List<SavedArticleEntity>>
 
-    @Query("select rowId + 1 from saved_articles order by rowId desc limit 1")
+    @Query("select rowId+1 from saved_articles order by rowId desc limit 1")
     suspend fun getNextId(): Long
 
 }

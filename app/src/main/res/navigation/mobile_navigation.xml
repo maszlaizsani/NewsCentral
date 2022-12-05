@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_home"
+    tools:ignore="ExtraText">
 
     <fragment
         android:id="@+id/nav_home"
@@ -11,7 +12,7 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_nav_home_to_detailedFragment"
+            android:id="@+id/open_detail_fragment"
             app:destination="@id/detailedFragment" />
     </fragment>
 
@@ -21,12 +22,17 @@
         android:label="@string/menu_saved_articles"
         tools:layout="@layout/fragment_saved_articles" >
         <action
-            android:id="@+id/action_nav_saved_articles_to_detailedFragment"
+            android:id="@+id/open_saved_detail_fragment"
             app:destination="@id/detailedFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailedFragment"
-        android:name="com.example.newscentral.ui.detailedView.DetailedFragment"
-        android:label="DetailedFragment" />
+        android:label="@string/menu_details"
+        android:name="com.example.newscentral.ui.detailedView.DetailedFragment">
+        <argument
+            android:name="selectedArticle"
+            app:argType="com.example.newscentral.APImodel.Article"
+            />
+    </fragment>
 
 </navigation>

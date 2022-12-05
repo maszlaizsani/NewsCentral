@@ -2,7 +2,8 @@ package com.example.newscentral
 
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
+import android.view.MenuItem
+import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -40,6 +41,36 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_hungarian_top -> {
+                getHungarianArticles()
+                true
+            }
+            R.id.action_us_top -> {
+                getUsArticles()
+                true
+            }
+            R.id.action_german_top -> {
+                getGermanArticles()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun getHungarianArticles() {
+        Toast.makeText(this,"Hun clicked.", Toast.LENGTH_SHORT)
+    }
+
+    private fun getGermanArticles() {
+        Toast.makeText(this,"Us clicked.", Toast.LENGTH_SHORT)
+    }
+
+    private fun getUsArticles() {
+        Toast.makeText(this,"German clicked.", Toast.LENGTH_SHORT)
     }
 
     override fun onSupportNavigateUp(): Boolean {

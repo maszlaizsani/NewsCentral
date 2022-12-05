@@ -4,7 +4,9 @@ import com.example.newscentral.database.SavedArticleEntity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Article {
+import java.io.Serializable;
+
+public class Article implements Serializable {
     @SerializedName("source")
     @Expose
     private Source source;
@@ -29,6 +31,14 @@ public class Article {
     @SerializedName("content")
     @Expose
     private String content;
+
+    public Article(String author, String title, String content, String url, String urlToImage) {
+        this.author= author;
+        this.title = title;
+        this.content = content;
+        this.url = url;
+        this.urlToImage = urlToImage;
+    }
 
     public Source getSource() {
         return source;
@@ -105,6 +115,15 @@ public class Article {
                 article.urlToImage == null ? "null" : article.urlToImage,
                 article.publishedAt == null ? "null" : article.publishedAt,
                 article.content == null ? "null" : article.content);
+    }
+
+    public static Article convertEntityToApiModel(SavedArticleEntity savedArticleEntity){
+        return new Article(
+                savedArticleEntity.getAuthor(),
+                savedArticleEntity.getTitle(),
+                savedArticleEntity.getContent(),
+                savedArticleEntity.getUrl(),
+                savedArticleEntity.getUrlToImage());
     }
 
 }

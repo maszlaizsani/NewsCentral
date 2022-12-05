@@ -7,12 +7,15 @@ import com.example.newscentral.APImodel.Article
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "Top Hungarian Articles Right Now"
-    }
-    val text: LiveData<String> = _text
+    private val _navigateToDetail = MutableLiveData<Article>()
+    val navigateToDetail: LiveData<Article>
+        get() = _navigateToDetail
 
-   /* fun onArticleClicked(article: Article) {
+    fun displayArticleDetails(article: Article) {
         _navigateToDetail.value = article
-    }*/
+    }
+
+    fun displayArticleDetailsComplete() {
+        _navigateToDetail.value = null
+    }
 }

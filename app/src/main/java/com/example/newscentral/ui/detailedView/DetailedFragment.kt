@@ -7,17 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.newscentral.APImodel.Article
 import com.example.newscentral.R
-import com.example.newscentral.database.SavedArticleDatabase
 import com.example.newscentral.databinding.FragmentDetailedViewBinding
-import com.example.newscentral.ui.home.HomeViewModel
 
 
-class DetailedFragment(val article: Article) : Fragment() {
+class DetailedFragment() : Fragment() {
 
     private var _binding: FragmentDetailedViewBinding? = null
 
@@ -29,24 +25,21 @@ class DetailedFragment(val article: Article) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailedViewBinding.inflate(inflater, container, false)
-        val application = requireNotNull(this.activity).application
-        val dataSource = SavedArticleDatabase.getInstance(application).savedArticleDatabaseDao
 
-        val viewModelFactory = DetailedViewModelFactory(article)
-        val detailedViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        val arguments = DetailedFragmentArgs.fromBundle(requireArguments())
 
-        binding.titleText.text = article.title
+        binding.titleText.text = arguments.selectedArticle.title
         Glide.with(this)
-            .load(article.urlToImage)
+            .load(arguments.selectedArticle.urlToImage)
             .apply(
                 RequestOptions()
                     .placeholder(R.drawable.loading)
                     .error(R.drawable.image)
             )
             .into(binding.image)
-        binding.content.text = article.content
+        binding.content.text = arguments.selectedArticle.content
         binding.openButton.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(article.url))
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(arguments.selectedArticle.url))
             startActivity(browserIntent) }
 
         return binding.root

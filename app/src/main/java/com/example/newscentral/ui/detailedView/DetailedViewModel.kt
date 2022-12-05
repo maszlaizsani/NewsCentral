@@ -5,6 +5,10 @@ import com.example.newscentral.APImodel.Article
 
 class DetailedViewModel(val article: Article) : ViewModel() {
 
+    fun getArticleObject(): Article {
+        return article
+    }
+
     fun getTitle(): String {
         return article.title
     }
@@ -15,5 +19,9 @@ class DetailedViewModel(val article: Article) : ViewModel() {
 
     fun getContent(): String {
         return article.content
+    }
+
+    fun getUrl(): String {
+        return article.url
     }
 }
